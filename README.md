@@ -1,1 +1,1 @@
-# API para reserva de sala, que faz comunicação direta com a api de gestão escolar 
+# Reserva de sala. Projeto em Desenvolvimento. 
