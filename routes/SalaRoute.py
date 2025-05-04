@@ -23,7 +23,6 @@ def criar_sala():
         nome=data.get('nome'),
         localizacao=data.get('localizacao'),
         capacidade=data.get('capacidade'),
-        tipo=data.get('tipo'),
         recursos=data.get('recursos'),
         disponivel=data.get('disponivel', True)
     )
@@ -42,7 +41,6 @@ def atualizar_sala(sala_id):
     sala.nome = data.get('nome', sala.nome)
     sala.localizacao = data.get('localizacao', sala.localizacao)
     sala.capacidade = data.get('capacidade', sala.capacidade)
-    sala.tipo = data.get('tipo', sala.tipo)
     sala.recursos = data.get('recursos', sala.recursos)
     sala.disponivel = data.get('disponivel', sala.disponivel)
 
