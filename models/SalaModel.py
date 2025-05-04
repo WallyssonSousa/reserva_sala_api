@@ -1,6 +1,6 @@
 from database import db
 
-class Sala(db.Model):
+class SalaModel(db.Model):
     __tablename__ = 'sala'
     id = db.Column(db.Integer, primary_key=True)
     nome = db.Column(db.String(100), nullable=False, unique=True)
@@ -9,7 +9,7 @@ class Sala(db.Model):
     recursos = db.Column(db.String(250), nullable=True)
     disponivel = db.Column(db.Boolean, default=True)
     
-    reservas = db.relationship('Reserva', backref='sala', lazy=True)
+    reservas = db.relationship('ReservaModel', backref='sala', lazy=True)
 
     def to_dict(self):
         return{

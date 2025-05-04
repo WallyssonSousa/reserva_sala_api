@@ -7,8 +7,8 @@ class ReservaModel(db.Model):
     sala_id = db.Column(db.Integer, db.ForeignKey('sala.id'), nullable=False)
     horario_inicio = db.Column(db.DateTime, nullable=False)
     horario_fim = db.Column(db.DateTime, nullable=False)
-    professor_id = db.Column(db.Integer, db.ForeignKey('professor.id'), nullable=False)
-    turma_id = db.Column(db.Integer, db.ForeignKey('turma.id'), nullable=False)
+    professor_id = db.Column(db.Integer, nullable=False)
+    turma_id = db.Column(db.Integer, nullable=False)
 
     def to_dict(self):
         return {

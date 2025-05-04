@@ -3,6 +3,7 @@ from config import SQLALCHEMY_DATABASE_URI, SQLALCHEMY_TRACK_MODIFICATIONS
 from database import db
 from routes.SalaRoute import sala_bp
 from routes.ReservaRoute import reserva_bp
+from routes.HomeRoute import home_bp
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
@@ -15,6 +16,7 @@ with app.app_context():
 
 app.register_blueprint(sala_bp)
 app.register_blueprint(reserva_bp)
+app.register_blueprint(home_bp)
 
 if __name__ == '__main__':
     app.run(port=5001, debug=True)

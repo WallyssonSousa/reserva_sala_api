@@ -2,7 +2,8 @@ from flask import Blueprint, request, jsonify
 from models.ReservaModel import ReservaModel
 from models.SalaModel import SalaModel
 from database import db
-from datatime import datetime, timedelta # type: ignore
+from datetime import datetime, timedelta
+from services.GestaoEscolarService import professor_existe, turma_existe
 
 reserva_bp = Blueprint('reserva', __name__)
 def tem_confiltos(sala_id, horario_inicio, horario_fim, reserva_id=None):
@@ -15,8 +16,8 @@ def tem_confiltos(sala_id, horario_inicio, horario_fim, reserva_id=None):
     return conflitos is not None
 
 @reserva_bp.route('/reservas', methods=['GET'])
-def obter_reservas(id):
-    reserva = ReservaModel.query.get_or_404(id)
+def obter_reservas(reserva_id):
+    reserva = ReservaModel.query.get_or_404(reserva_id)
     return jsonify(reserva.to_dict()), 200
 
 @reserva_bp.route('/reservas', methods=['POST'])
@@ -28,6 +29,12 @@ def criar_reserva():
         fim = datetime.fromisoformat(data['horario_fim'])
     except (ValueError, KeyError):
         return jsonify({'message': 'Formato de data inválido ou faltando'}), 400
+    
+    if not professor_existe(data['professor_id']):
+        return jsonify({'message': 'Professor não encontrado'}), 404
+    
+    if not turma_existe(data['turma_id']):
+        return jsonify({'message': 'Turma não encontrada'}), 404
     
     if fim <= inicio:
         return jsonify({'message': 'O horário de fim deve ser maior que o horário de início'}), 400
@@ -65,13 +72,19 @@ def atualizar_reserva(id):
     if tem_confiltos(data['sala_id'], inicio, fim, reserva.id):
         return jsonify({'message': 'Conflito de horário para a sala'}), 409
     
+    required_fields = ['sala_id', 'horario_inicio', 'horario_fim', 'professor_id', 'turma_id']
+    missing = [f for f in required_fields if f not in data]
+
+    if missing:
+        return jsonify({'message': f'Campos obrigatórios faltando: {", ".join(missing)}'}), 400
+    
     reserva.sala_id = data['sala_id']
     reserva.horario_inicio = inicio
     reserva.horario_fim = fim
     reserva.professor_id = data['professor_id']
     reserva.turma_id = data['turma_id']
 
-    db.commit()
+    db.session.commit()
     return jsonify(reserva.to_dict()), 200
 
 @reserva_bp.route('/reservas/<int:reserva_id>', methods=['DELETE'])

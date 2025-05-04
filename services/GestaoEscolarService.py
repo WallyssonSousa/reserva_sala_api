@@ -1,6 +1,8 @@
 import requests
 
-BASE_URL = "http://localhost:8080/api/v1/gestao-escolar"
+BASE_URL = "https://gestao-escolar-api-3uu5.onrender.com/"
+
+""" e4340d5ce26ec43f2274105cc4a6dd67 -> senha admin """
 
 def professor_existe(professor_id):
     res = requests.get(f'{BASE_URL}/professores/{professor_id}')
