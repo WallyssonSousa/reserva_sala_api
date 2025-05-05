@@ -16,9 +16,15 @@ def tem_confiltos(sala_id, horario_inicio, horario_fim, reserva_id=None):
     return conflitos is not None
 
 @reserva_bp.route('/reservas', methods=['GET'])
-def obter_reservas(reserva_id):
+def obter_reservas():
+    reservas = ReservaModel.query.all()
+    return jsonify([r.to_dict() for r in reservas]), 200
+
+@reserva_bp.route('/reservas/<int:reserva_id>', methods=['GET'])
+def obter_reserva(reserva_id):
     reserva = ReservaModel.query.get_or_404(reserva_id)
     return jsonify(reserva.to_dict()), 200
+
 
 @reserva_bp.route('/reservas', methods=['POST'])
 def criar_reserva():
