@@ -4,16 +4,10 @@ BASE_URL = "https://gestao-escolar-api-3uu5.onrender.com/"
 
 TOKEN_CACHE = {"token": None}
 
-""" e4340d5ce26ec43f2274105cc4a6dd67 -> senha admin """
-
 def get_token(): 
     if TOKEN_CACHE["token"]: 
         return TOKEN_CACHE["token"]
-    
-    res = requests.post(f"{BASE_URL}/login", json={
-        "username": "admin", 
-        "password": "e4340d5ce26ec43f2274105cc4a6dd67"
-    })
+
 
     if res.status_code == 200: 
         token = res.json()["access_token"]
