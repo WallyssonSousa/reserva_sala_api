@@ -25,7 +25,6 @@ def obter_reserva(reserva_id):
     reserva = ReservaModel.query.get_or_404(reserva_id)
     return jsonify(reserva.to_dict()), 200
 
-
 @reserva_bp.route('/reservas', methods=['POST'])
 def criar_reserva():
     data = request.get_json()
