@@ -2,6 +2,7 @@ from flask import Blueprint, request, jsonify
 from models.ReservaModel import ReservaModel
 from models.SalaModel import SalaModel
 from database import db
+from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
 from datetime import datetime, timedelta
 from services.GestaoEscolarService import professor_existe, turma_existe
 
@@ -26,7 +27,12 @@ def obter_reserva(reserva_id):
     return jsonify(reserva.to_dict()), 200
 
 @reserva_bp.route('/reservas', methods=['POST'])
+@jwt_required()
 def criar_reserva():
+    jwt_claims = get_jwt()
+    if jwt_claims.get("role") != "admin":
+        return jsonify({"erro": "Acesso negado: apenas administradores podem criar reservas."}), 403
+    
     data = request.get_json()
 
     try: 
@@ -61,7 +67,12 @@ def criar_reserva():
     return jsonify(nova_reserva.to_dict()), 201
 
 @reserva_bp.route('/reservas/<int:reserva_id>', methods=['PUT'])
+@jwt_required()
 def atualizar_reserva(id):
+    jwt_claims = get_jwt()
+    if jwt_claims.get("role") != "admin":
+        return jsonify({"erro": "Acesso negado: apenas administradores podem atualizar reservas."}), 403
+    
     reserva = ReservaModel.query.get_or_404(id)
     data = request.get_json()
 
@@ -93,7 +104,12 @@ def atualizar_reserva(id):
     return jsonify(reserva.to_dict()), 200
 
 @reserva_bp.route('/reservas/<int:reserva_id>', methods=['DELETE'])
+@jwt_required()
 def deletar_reserva(id):
+    jwt_claims = get_jwt()
+    if jwt_claims.get("role") != "admin":
+        return jsonify({"erro": "Acesso negado: apenas administradores podem deletar reservas."}), 403
+    
     reserva = ReservaModel.query.get_or_404(id)
     db.session.delete(reserva)
     db.session.commit()
