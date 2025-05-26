@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify
 from models.SalaModel import SalaModel
+from flask_jwt_extended import jwt_required, get_jwt
 from database import db
 
 sala_bp = Blueprint('sala', __name__)
@@ -17,7 +18,12 @@ def obter_sala(sala_id):
     return jsonify({'message': 'Sala não encontrada'}), 404
 
 @sala_bp.route('/salas', methods=['POST'])
-def criar_sala(): 
+@jwt_required()
+def criar_sala():
+    jwt_claims = get_jwt()
+    if jwt_claims.get("role") != "admin":
+        return jsonify({"erro": "Acesso negado: apenas administradores podem criar salas."}), 403
+    
     data = request.get_json()
     nova_sala = SalaModel(
         nome=data.get('nome'),
@@ -32,7 +38,12 @@ def criar_sala():
     return jsonify(nova_sala.to_dict()), 201
 
 @sala_bp.route('/salas/<int:sala_id>', methods=['PUT'])
+@jwt_required()
 def atualizar_sala(sala_id):
+    jwt_claims = get_jwt()
+    if jwt_claims.get("role") != "admin":
+        return jsonify({"erro": "Acesso negado: apenas administradores podem atualizar salas."}), 403
+    
     sala = SalaModel.query.get(sala_id)
     if not sala:
         return jsonify({'message': 'Sala não encontrada'}), 404
@@ -48,7 +59,12 @@ def atualizar_sala(sala_id):
     return jsonify(sala.to_dict()), 200
 
 @sala_bp.route('/salas/<int:sala_id>', methods=['DELETE'])
+@jwt_required()
 def deletar_sala(sala_id):
+    jwt_claims = get_jwt()
+    if jwt_claims.get("role") != "admin":
+        return jsonify({"erro": "Acesso negado: apenas administradores podem deletar salas."}), 403
+    
     sala = SalaModel.query.get(sala_id)
     if not sala:
         return jsonify({'message': 'Sala não encontrada'}), 404

@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify
 from models.ReservaModel import ReservaModel
 from models.SalaModel import SalaModel
 from database import db
-from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
+from flask_jwt_extended import jwt_required, get_jwt
 from datetime import datetime, timedelta
 from services.GestaoEscolarService import professor_existe, turma_existe
 
