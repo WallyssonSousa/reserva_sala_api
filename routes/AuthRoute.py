@@ -77,7 +77,7 @@ def login():
         role = "admin" if username == ADMIN_USERNAME else "usuario"
         
         access_token = create_access_token(
-            identity=username
+            identity=username,
             additional_claims={"role": role}
         )
         
