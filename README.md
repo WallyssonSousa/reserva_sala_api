@@ -25,6 +25,7 @@ Essa integração promove **consistência entre dados**, **controle eficaz de re
 ---
 
 ## 📁 Estrutura do Projeto
+```sh
 reserva_sala_api/
 ├── app.py # Arquivo principal da aplicação
 ├── config.py # Configurações (ex: banco, JWT, .env)
@@ -42,6 +43,38 @@ reserva_sala_api/
 │ └── SalaRoute.py # Rotas relacionadas à sala
 └── services/
 └── GestaoEscolarService.py # Comunicação com API de Gestão Escolar
+```
+---
+
+## Como Rodar o Projeto (Via Docker)
+### 🔨 Fazendo o build da imagem
+```sh
+docker compose build
+```
+Isso usará o build definido no docker-compose.yml, criará a imagem reserva-sala-api:1.0 e já prepara tudo pro up.
+### 🚀 Rodando a aplicação
+```sh
+docker compose up
+```
+ou em modo "background":
+```sh
+docker compose up -d
+```
+### ⛔ Parando a aplicação:
+```sh
+Ctrl+C
+```
+ou em modo "background":
+```sh
+docker compose down
+```
+### ❌ Apagando a imagem:
+**Usando docker compose:**
+```sh
+docker compose down --rmi all
+```
+`--rmi all` remove todas as imagens construídas pelo docker compose;
+`-v` se quiser também remover volumes
 
 ---
 
@@ -52,12 +85,21 @@ reserva_sala_api/
 git clone https://github.com/WallyssonSousa/reserva_sala_api.git
 cd reserva_sala_api
 
-# Crie e ative um ambiente virtual (opcional mas recomendado)
+# Criar e Ativar um Ambiente Virtual
 python -m venv venv
-source venv/bin/activate  # no Windows: venv\Scripts\activate
+source venv/bin/activate  # Linux/Mac
+venv\Scripts\activate  # Windows
 
-# Instale as dependências
+#  Instalar Dependências
 pip install -r requirements.txt
 
-# Execute o projeto
+# Configurar o Banco de Dados
+flask db init
+flask db migrate -m "Inicialização do banco de dados"
+flask db upgrade
+
+# Rodar o Servidor Flask - O servidor será iniciado em http://127.0.0.1:5000/
 python app.py
+
+# Como Executar os Testes
+pytest
