@@ -3,14 +3,19 @@ import requests
 BASE_URL = "https://gestao-escolar-api-3uu5.onrender.com/"
 
 TOKEN_CACHE = {"token": None}
+ADMIN_CREDENTIALS = {
+    "username": "admin",
+    "password": "e4340d5ce26ec43f2274105cc4a6dd67"
+}
 
-def get_token(): 
-    if TOKEN_CACHE["token"]: 
+def get_token():
+    if TOKEN_CACHE["token"]:
         return TOKEN_CACHE["token"]
 
+    res = requests.post(f"{BASE_URL}/login", json=ADMIN_CREDENTIALS)
 
-    if res.status_code == 200: 
-        token = res.json()["access_token"]
+    if res.status_code == 200:
+        token = res.json().get("access_token")
         TOKEN_CACHE["token"] = token
         return token
 
@@ -18,7 +23,6 @@ def get_token():
 
 
 def professor_existe(professor_id):
-
     token = get_token()
     if not token:
         return False
