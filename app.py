@@ -43,4 +43,4 @@ app.register_blueprint(reserva_bp)
 app.register_blueprint(home_bp)
 
 if __name__ == '__main__':
-    app.run(port=5001, debug=True)
+    app.run(port=app.config.get("PORT", 5001), debug=True)
