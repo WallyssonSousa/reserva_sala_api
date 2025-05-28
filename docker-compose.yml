@@ -35,10 +35,10 @@ services:
     volumes:
       - .:/app
     depends_on:
-      - db
+      - db-reserva-sala-api
 
   #Banco de Dados
-  db:
+  db-reserva-sala-api:
     image: postgres:15
     restart: always
     ports:
